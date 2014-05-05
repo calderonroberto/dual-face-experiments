@@ -1,0 +1,41 @@
+{
+  "uuid": "db2b2c0d-06db-417f-a856-f521b238aa62",
+  "shortName": "Dual Face",
+  "longName": "Dual Face Experiments",
+  "companyName": "Roberto Calderon",
+  "versionCode": 1,
+  "versionLabel": "0.2.0",
+  "capabilities": [ "configurable" ],
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "images": 0,
+    "text": 1
+  },
+  "resources": {
+    "media": [
+        {
+          "menuIcon": true,
+          "type": "png",
+          "name": "IMAGE_MENU_ICON",
+          "file": "images/menu_icon_dualface.png"
+        },
+      	{
+          "type": "png",
+          "name": "IMAGE_BLACK",
+          "file": "images/black.png"
+        },
+      	{
+          "type": "png",
+          "name": "IMAGE_1",
+          "file": "images/1.png"
+        },
+      	{
+          "type": "png",
+          "name": "IMAGE_2",
+          "file": "images/2.png"
+        }
+    ]
+  }
+}
