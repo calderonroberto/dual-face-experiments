@@ -213,7 +213,7 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, text_layer_get_layer(text_time_layer));
 
   //bluetooth connection
-  connection_layer = text_layer_create(GRect(0, 150, /* width */ bounds.size.w/4, 15 /* height */));
+  connection_layer = text_layer_create(GRect(0, 150, /* width */ bounds.size.w/5, 15 /* height */));
   text_layer_set_text_color(connection_layer, GColorWhite);
   text_layer_set_background_color(connection_layer, GColorClear);
   text_layer_set_font(connection_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
@@ -222,7 +222,7 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, text_layer_get_layer(connection_layer));
 
   //date
-  text_date_layer = text_layer_create((GRect){ .origin={bounds.size.w/4,150}, .size={(bounds.size.w/4)*2,15 } });
+  text_date_layer = text_layer_create((GRect){ .origin={bounds.size.w/5,150}, .size={(bounds.size.w/5)*3,15 } });
   text_layer_set_text_color(text_date_layer, GColorWhite);
   text_layer_set_background_color(text_date_layer, GColorClear);
   text_layer_set_font(text_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
@@ -230,7 +230,7 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, text_layer_get_layer(text_date_layer));
 
   //battery status
-  battery_layer = text_layer_create(GRect((bounds.size.w/4)*3, 150, /* width */ bounds.size.w/4, 15 /* height */));
+  battery_layer = text_layer_create(GRect((bounds.size.w/4)*3, 150, /* width */ bounds.size.w/5, 15 /* height */));
   text_layer_set_text_color(battery_layer, GColorWhite);
   text_layer_set_background_color(battery_layer, GColorClear);
   text_layer_set_font(battery_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
