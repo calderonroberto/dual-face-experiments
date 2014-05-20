@@ -1,5 +1,5 @@
 var initialized = false;
-var config_url = "http://robertocalderon.ca/pebbleconfiguration.php?v=0.1";
+var config_url = "http://robertocalderon.ca/pebble/dualfaceexperimentsconfiguration.php?v=0.1";
 
 Pebble.addEventListener("ready", function() {
   console.log("ready called!");
