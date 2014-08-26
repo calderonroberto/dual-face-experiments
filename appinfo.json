@@ -4,7 +4,7 @@
   "longName": "Dual Face Experiments",
   "companyName": "Roberto Calderon",
   "versionCode": 1,
-  "versionLabel": "0.2.0",
+  "versionLabel": "0.2.1",
   "capabilities": [ "configurable" ],
   "watchapp": {
     "watchface": true

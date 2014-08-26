@@ -69,6 +69,21 @@ void handle_image () {
   }
 }
 
+void top_button_message () {
+  /*
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+  Tuplet url_value = TupletCString(CONF_THINGBROKERURL, thingbrokerurl_text);
+  Tuplet id_value = TupletCString(CONF_THINGID, thingid_text);
+  DictionaryResult url = dict_write_tuplet(iter, &url_value);
+  DictionaryResult id = dict_write_tuplet(iter, &id_value);
+
+  dict_write_end(iter);
+  app_message_outbox_send(); //TODO: Clear message cache?
+  */
+}
+
+
 /************ Time, Accel, Battery and Bluetooth handlers ************/
 
 void accel_tap_handler(AccelAxisType axis, int32_t direction) {
@@ -97,7 +112,7 @@ void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
   // Need to be static because they're used by the system later.
   static char time_text[] = "00:00";
   static char date_text[] = "Xxx 00/00/00";
-  static char text_text[] = "     ";
+  static char text_text[] = "      ";
 
   char *time_format;
 
@@ -140,23 +155,40 @@ void update_face () {
 
 /************ Communication Handlers ************/
 
+char *translate_incoming_error(AppMessageResult result) {
+  switch (result) {
+    case APP_MSG_OK: return "APP_MSG_OK";
+    case APP_MSG_SEND_TIMEOUT: return "APP_MSG_SEND_TIMEOUT";
+    case APP_MSG_SEND_REJECTED: return "APP_MSG_SEND_REJECTED";
+    case APP_MSG_NOT_CONNECTED: return "APP_MSG_NOT_CONNECTED";
+    case APP_MSG_APP_NOT_RUNNING: return "APP_MSG_APP_NOT_RUNNING";
+    case APP_MSG_INVALID_ARGS: return "APP_MSG_INVALID_ARGS";
+    case APP_MSG_BUSY: return "APP_MSG_BUSY";
+    case APP_MSG_BUFFER_OVERFLOW: return "APP_MSG_BUFFER_OVERFLOW";
+    case APP_MSG_ALREADY_RELEASED: return "APP_MSG_ALREADY_RELEASED";
+    case APP_MSG_CALLBACK_ALREADY_REGISTERED: return "APP_MSG_CALLBACK_ALREADY_REGISTERED";
+    case APP_MSG_CALLBACK_NOT_REGISTERED: return "APP_MSG_CALLBACK_NOT_REGISTERED";
+    case APP_MSG_OUT_OF_MEMORY: return "APP_MSG_OUT_OF_MEMORY";
+    case APP_MSG_CLOSED: return "APP_MSG_CLOSED";
+    case APP_MSG_INTERNAL_ERROR: return "APP_MSG_INTERNAL_ERROR";
+    default: return "UNKNOWN ERROR";
+  }
+}
+
 void out_sent_handler(DictionaryIterator *sent, void *context) {
-  // outgoing message was delivered
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Outgoing message to phone was delivered");
 }
 
 void out_failed_handler(DictionaryIterator *failed, AppMessageResult reason, void *context) {
-  // outgoing message failed
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Outgoing message to phone failed"); //TODO: implement error translator
 }
 
 void in_received_handler(DictionaryIterator *received, void *context) {
-  // incoming message received
-  //APP_LOG(APP_LOG_LEVEL_DEBUG, "CONF_TEXT EXISTS %d", persist_exists(CONF_TEXT) );
-  //APP_LOG(APP_LOG_LEVEL_DEBUG, "CONF_images EXISTS %d", persist_exists(CONF_IMAGES) );
-
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Incoming message from phone received");
+  
   Tuple *conf_images = dict_find(received, CONF_IMAGES);
   if (conf_images) {
     int value = atoi(conf_images->value->cstring);     
-    //APP_LOG(APP_LOG_LEVEL_DEBUG, "Images: %i", value);
     if (value == 1) {     
       persist_write_bool(CONF_IMAGES, true);
       handle_image();
@@ -176,8 +208,9 @@ void in_received_handler(DictionaryIterator *received, void *context) {
 
 void in_dropped_handler(AppMessageResult reason, void *context) {
   // incoming message dropped
-}
+  APP_LOG(APP_LOG_LEVEL_DEBUG, ">>> Incoming message from phone dropped %s", translate_incoming_error(reason));
 
+}
 
 /************ App initialization and finalization ************/
 
@@ -255,18 +288,20 @@ static void window_load(Window *window) {
 }
 
 static void window_unload(Window *window) {
+  gbitmap_destroy(image1);
+  gbitmap_destroy(image2);
+  bitmap_layer_destroy(image_layer);
+  
   text_layer_destroy(text_layer);
   text_layer_destroy(text_time_layer);
   text_layer_destroy(text_date_layer);
   text_layer_destroy(connection_layer);
   text_layer_destroy(battery_layer);
+  
   tick_timer_service_unsubscribe();
   battery_state_service_unsubscribe();
   bluetooth_connection_service_unsubscribe();
   accel_tap_service_unsubscribe();
-  gbitmap_destroy(image1);
-  gbitmap_destroy(image2);
-  bitmap_layer_destroy(image_layer);
 }
 
 static void init(void) {
